@@ -1,10 +1,16 @@
 package com.esiea.pootd2.interfaces;
 
 import java.util.Scanner;
+import com.esiea.pootd2.controllers.*;
+import com.esiea.pootd2.parser.*;
 
 public class TextInterface implements IUserInterface{
-    public TextInterface() {
+    private IExplorerController controller;
+    private ICommandParser parser;
 
+    public TextInterface(IExplorerController controller) {
+        this.controller = controller;
+        this.parser = new UnixLikeCommandParser();
     }
 
     public void run() {
@@ -17,6 +23,8 @@ public class TextInterface implements IUserInterface{
 
             if (userInput.equals("exit"))
                 break;
+            
+            controller.executeCommand(this.parser.parse(userInput));
         }
         
         scan.close();
