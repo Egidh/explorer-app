@@ -17,7 +17,5 @@ public abstract class Inode {
         return parent;
     }
     
-    public abstract String getContent();
-    
     public abstract int getSize();
 }

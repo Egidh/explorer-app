@@ -26,7 +26,6 @@ public class FolderInode extends Inode {
         return this.children;
     }
 
-    @Override
     public String getContent() {
         String inodes = "";
 
