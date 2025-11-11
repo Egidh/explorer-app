@@ -34,7 +34,6 @@ public class UnixLikeCommandParser implements ICommandParser{
     public Command parse(String args) {
         String[] parsedArgs = splitArguments(args);
         String cmd = parsedArgs[0];
-        mapCommand(cmd, Arrays.copyOfRange(parsedArgs, 1, parsedArgs.length));
-        return null;
+        return mapCommand(cmd, Arrays.copyOfRange(parsedArgs, 1, parsedArgs.length));
     }
 }
