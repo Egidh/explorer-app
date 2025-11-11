@@ -1,11 +1,9 @@
 package com.esiea.pootd2.commands;
 
-import java.util.ArrayList;
-
 public class ListCommand extends Command{
-    public ArrayList<String> paths;
+    public String[] paths;
 
-    public ListCommand(ArrayList<String> args) {
+    public ListCommand(String[] args) {
         this.paths = args;
     }
 }
