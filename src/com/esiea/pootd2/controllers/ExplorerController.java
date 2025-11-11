@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ExplorerController implements IExplorerController{
     private FolderInode currentFolder;
 
-    ExplorerController(FolderInode node) {
+    public ExplorerController(FolderInode node) {
         this.currentFolder = node;
     }
 
@@ -169,7 +169,25 @@ public class ExplorerController implements IExplorerController{
     }
 
     private String doCommand(ChangeDirectoryCommand cmd) {
-        return null;
+        String output = "";
+        String targetPath = cmd.path;
+
+        if (!cmd.path.endsWith("/")) {
+            targetPath += "/";
+        }
+
+        Inode targetFolder = getInodeFromPath(targetPath);
+        if (targetFolder == null) {
+            output += "Invalid path: " + targetPath;
+        }
+        else if (targetFolder instanceof FolderInode) {
+            this.currentFolder = (FolderInode)targetFolder;
+        }
+        else {
+            output += cmd.path + " is not a folder";
+        }
+
+        return output;
     }
 
     private String doCommand(ErrorCommand cmd) {
