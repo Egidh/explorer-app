@@ -2,7 +2,6 @@ package com.esiea.pootd2;
 
 import com.esiea.pootd2.models.*;
 import com.esiea.pootd2.controllers.*;
-import com.esiea.pootd2.commands.*;
 import com.esiea.pootd2.interfaces.*;
 
 public class ExplorerApp {
@@ -20,7 +19,8 @@ public class ExplorerApp {
 
         homeFolder.addInode(helloFile);
 
-        IUserInterface tui = new TextInterface();
+        IExplorerController explorer = new ExplorerController(root);
+        IUserInterface tui = new TextInterface(explorer);
         tui.run();
     }   
 }
