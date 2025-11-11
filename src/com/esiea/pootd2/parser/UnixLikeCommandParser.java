@@ -1,7 +1,6 @@
 package com.esiea.pootd2.parser;
 
 import com.esiea.pootd2.commands.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class UnixLikeCommandParser implements ICommandParser{
@@ -9,14 +8,14 @@ public class UnixLikeCommandParser implements ICommandParser{
 
     }
 
-    private static ArrayList<String> splitArguments(String args) {
-        ArrayList<String> splittedArgs;
-        splittedArgs = new ArrayList<String>(Arrays.asList(args.split("\s")));
+    private static String[] splitArguments(String args) {
+        String[] splittedArgs;
+        splittedArgs = args.split("\s");
 
         return splittedArgs;
     }
 
-    private static Command mapCommand(String cmd, ArrayList<String> args) {
+    private static Command mapCommand(String cmd, String[] args) {
         switch (cmd) {
             case "ls":
                 return new ListCommand(args);
@@ -33,9 +32,9 @@ public class UnixLikeCommandParser implements ICommandParser{
     }
 
     public Command parse(String args) {
-        ArrayList<String> parsedArgs = splitArguments(args);
-        String cmd = parsedArgs.removeFirst();
-        mapCommand(cmd, parsedArgs);
+        String[] parsedArgs = splitArguments(args);
+        String cmd = parsedArgs[0];
+        mapCommand(cmd, Arrays.copyOfRange(parsedArgs, 1, parsedArgs.length));
         return null;
     }
 }
