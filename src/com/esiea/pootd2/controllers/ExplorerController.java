@@ -124,6 +124,7 @@ public class ExplorerController implements IExplorerController{
 
     private String doCommand(MakeDirectoryCommand cmd) {
         String output = "";
+
         for (String path : cmd.paths) {
             if (!path.endsWith("/")) path += "/";
 
@@ -144,7 +145,27 @@ public class ExplorerController implements IExplorerController{
     }
 
     private String doCommand(TouchCommand cmd) {
-        return null;
+        String output = "";
+
+        for (String path : cmd.paths) {
+            if (path.endsWith("/")) {
+                output += "Invalid file name :" + path; 
+            }
+
+            String parentFolderPath = path.substring(0, path.lastIndexOf("/", path.length() - 2));
+            String fileName = path.substring(path.lastIndexOf("/", path.length() - 2) + 1);
+
+            FolderInode parentFolder = (FolderInode)getInodeFromPath(parentFolderPath);
+            if (parentFolder == null) {
+                output += "Invalid path :" + parentFolderPath;
+                continue;
+            }
+
+            FileInode newFile = new FileInode(fileName);
+            parentFolder.addInode(newFile);
+        }
+
+        return output;
     }
 
     private String doCommand(ChangeDirectoryCommand cmd) {
