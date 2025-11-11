@@ -1,9 +1,11 @@
 package com.esiea.pootd2.commands;
 
+import java.util.ArrayList;
+
 public class MakeDirectoryCommand extends Command{
-    private String path;
+    public ArrayList<String> paths;
     
-    public MakeDirectoryCommand(String path) {
-        this.path = path;
+    public MakeDirectoryCommand(ArrayList<String> args) {
+        this.paths = args;
     }
 }

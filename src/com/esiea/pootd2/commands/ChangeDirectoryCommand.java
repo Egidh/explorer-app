@@ -1,9 +1,11 @@
 package com.esiea.pootd2.commands;
 
-public class ChangeDirectoryCommand {
-    private String path;
+import java.util.ArrayList;
 
-    public ChangeDirectoryCommand(String path) {
-        this.path = path;
+public class ChangeDirectoryCommand extends Command{
+    public String path;
+
+    public ChangeDirectoryCommand(ArrayList<String> args) {
+        this.path = args.removeFirst();
     }
 }

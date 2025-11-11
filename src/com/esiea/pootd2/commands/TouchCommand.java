@@ -1,9 +1,11 @@
 package com.esiea.pootd2.commands;
 
-public class TouchCommand extends Command{
-    private String path;
+import java.util.ArrayList;
 
-    public TouchCommand(String path) {
-        this.path = path;
+public class TouchCommand extends Command{
+    public ArrayList<String> paths;
+
+    public TouchCommand(ArrayList<String> args) {
+        this.paths = args;
     }
 }
