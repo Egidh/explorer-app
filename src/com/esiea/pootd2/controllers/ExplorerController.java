@@ -3,14 +3,13 @@ package com.esiea.pootd2.controllers;
 import com.esiea.pootd2.commands.*;
 import com.esiea.pootd2.models.*;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class ExplorerController implements IExplorerController{
-    private FolderInode currentInode;
+    private FolderInode currentFolder;
 
     ExplorerController(FolderInode node) {
-        this.currentInode = node;
+        this.currentFolder = node;
     }
 
     public String executeCommand(Command cmd) {
@@ -37,9 +36,15 @@ public class ExplorerController implements IExplorerController{
         int index = 0;
         int endOfChunkIndex = -1;
 
-        FolderInode folder = this.currentInode;
+        FolderInode folder = this.currentFolder;
         String pathChunk = null;
         boolean foundFolder = false;
+        
+        // Case where it is a full path
+        endOfChunkIndex = path.indexOf("/", index);
+        // Get back to "/"
+        if (endOfChunkIndex == 0) while (!folder.getName().equals("/")) folder = folder.getParent();
+        else endOfChunkIndex = -1;
         
         while (index < path.length()) {
             endOfChunkIndex = path.indexOf("/", index);
@@ -58,8 +63,14 @@ public class ExplorerController implements IExplorerController{
             
             // Not at the end of the path:
             pathChunk = path.substring(index, endOfChunkIndex);
-
             index += pathChunk.length();
+
+            // Substitution
+            if (pathChunk.equals("../")) {
+                folder = folder.getParent();
+                continue;
+            }
+            if (pathChunk.equals("./")) continue;
 
             ArrayList<Inode> children = folder.getChildren();   // Go through current Inode 
                 for (Inode child : children) {
@@ -82,7 +93,7 @@ public class ExplorerController implements IExplorerController{
         target = getInodeFromPath(path);
 
             // In case no inode is found
-            if (target == null) doCommand(new ErrorCommand("No file or folder at " + path)); 
+            if (target == null) return "No such file or folder at " + path; 
 
             // In case the inode is a file
             if (target instanceof FileInode) return target.getName();
@@ -100,13 +111,36 @@ public class ExplorerController implements IExplorerController{
         if (cmd.paths.length == 1) return getChildrenFromPath(cmd.paths[0]);
 
         else {
-            for (String path : cmd.paths)
+            String output = "";
+            for (String path : cmd.paths) {
+                output += path + ":\n";
+                output += getChildrenFromPath(path) + "\n\n";
+            }
+
+            return output;
         }
 
     }
 
     private String doCommand(MakeDirectoryCommand cmd) {
-        return null;
+        String output = "";
+        for (String path : cmd.paths) {
+            if (!path.endsWith("/")) path += "/";
+
+            String parentFolderPath = path.substring(0, path.lastIndexOf("/", path.length() - 2));
+            String folderName = path.substring(path.lastIndexOf("/", path.length() - 2) + 1);
+
+            FolderInode parentFolder = (FolderInode)getInodeFromPath(parentFolderPath);
+            if (parentFolder == null) {
+                output += "Invalid path :" + parentFolderPath;
+                continue;
+            }
+
+            FolderInode newFolder = new FolderInode(folderName);
+            parentFolder.addInode(newFolder);
+        }
+
+        return output;
     }
 
     private String doCommand(TouchCommand cmd) {
