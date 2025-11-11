@@ -1,6 +1,9 @@
 package com.esiea.pootd2;
 
 import com.esiea.pootd2.models.*;
+import com.esiea.pootd2.controllers.*;
+import com.esiea.pootd2.commands.*;
+import com.esiea.pootd2.interfaces.*;
 
 public class ExplorerApp {
     public static void main(String[] args) {
@@ -17,7 +20,7 @@ public class ExplorerApp {
 
         homeFolder.addInode(helloFile);
 
-        System.out.print(homeFolder.getChildren().get(0).getContent());
-        System.out.println(homeFolder.getContent());
+        IUserInterface tui = new TextInterface();
+        tui.run();
     }   
 }

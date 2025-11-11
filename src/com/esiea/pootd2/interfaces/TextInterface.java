@@ -3,6 +3,10 @@ package com.esiea.pootd2.interfaces;
 import java.util.Scanner;
 
 public class TextInterface implements IUserInterface{
+    public TextInterface() {
+
+    }
+
     public void run() {
         Scanner scan = new Scanner(System.in);
         String userInput = null;
