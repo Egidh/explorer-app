@@ -3,6 +3,7 @@ package com.esiea.pootd2.interfaces;
 import java.util.Scanner;
 import com.esiea.pootd2.controllers.*;
 import com.esiea.pootd2.parser.*;
+import com.esiea.pootd2.models.Inode;
 
 public class TextInterface implements IUserInterface{
     private IExplorerController controller;
@@ -20,7 +21,7 @@ public class TextInterface implements IUserInterface{
         String userInput = null;
         
         while (true) {
-            System.out.print("$ ");
+            System.out.print(controller.getCurrentFolder().getName() + "-$ ");
             userInput = scan.nextLine();
 
             if (userInput.equals("exit"))
