@@ -32,8 +32,11 @@ public class ExplorerController implements IExplorerController{
         }
     }
 
+	public Inode getCurrentFolder() {
+		return currentFolder;
+	}
+
     private Inode getInodeFromPath(String path) {
-        System.out.println("path: " + path);
         if(path.equals("")) return currentFolder;
 
         int index = 0;
@@ -112,7 +115,7 @@ public class ExplorerController implements IExplorerController{
             target = getInodeFromPath(path);
 
         // In case no inode is found
-        if (target == null) return "No such file or folder at " + path; 
+        if (target == null) return "No such file or folder: " + path; 
 
         // In case the inode is a file
         if (target instanceof FileInode) return target.getName();
@@ -148,7 +151,7 @@ public class ExplorerController implements IExplorerController{
 
             int endOfPathIndex = path.lastIndexOf("/", path.length() - 2);
             String parentFolderPath = "";
-            if (endOfPathIndex != -1) path.substring(0, endOfPathIndex);
+            if (endOfPathIndex != -1) parentFolderPath = path.substring(0, endOfPathIndex);
 
             int folderNamePathIndex = path.lastIndexOf("/", path.length() - 2);
             String folderName = "";
@@ -178,7 +181,7 @@ public class ExplorerController implements IExplorerController{
 
             int endOfPathIndex = path.lastIndexOf("/");
             String parentFolderPath = "";
-            if (endOfPathIndex != -1) path.substring(0, endOfPathIndex);
+            if (endOfPathIndex != -1) parentFolderPath = path.substring(0, endOfPathIndex);
 
             int fileNamePathIndex = path.lastIndexOf("/");
             String fileName = "";
@@ -221,6 +224,6 @@ public class ExplorerController implements IExplorerController{
     }
 
     private String doCommand(ErrorCommand cmd) {
-        return null;
+        return "Unknown command: " + cmd.getCommand() + "\n";
     }
 }
