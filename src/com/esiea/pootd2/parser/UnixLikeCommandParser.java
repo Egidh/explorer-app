@@ -10,7 +10,7 @@ public class UnixLikeCommandParser implements ICommandParser{
 
     private static String[] splitArguments(String args) {
         String[] splittedArgs;
-        splittedArgs = args.split("\s");
+        splittedArgs = args.trim().split("\s");
 
         return splittedArgs;
     }
@@ -31,9 +31,13 @@ public class UnixLikeCommandParser implements ICommandParser{
         }
     }
 
-    public Command parse(String args) {
-        String[] parsedArgs = splitArguments(args);
+    public Command parse(String line) {
+        String[] parsedArgs = splitArguments(line);
         String cmd = parsedArgs[0];
-        return mapCommand(cmd, Arrays.copyOfRange(parsedArgs, 1, parsedArgs.length));
+        String[] args = null;
+        if (parsedArgs.length > 1) {
+            args = Arrays.copyOfRange(parsedArgs, 1, parsedArgs.length);
+        } 
+        return mapCommand(cmd, args);
     }
 }

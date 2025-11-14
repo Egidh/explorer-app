@@ -33,6 +33,9 @@ public class ExplorerController implements IExplorerController{
     }
 
     private Inode getInodeFromPath(String path) {
+        System.out.println("path: " + path);
+        if(path.equals("")) return currentFolder;
+
         int index = 0;
         int endOfChunkIndex = -1;
 
@@ -43,72 +46,87 @@ public class ExplorerController implements IExplorerController{
         // Case where it is a full path
         endOfChunkIndex = path.indexOf("/", index);
         // Get back to "/"
-        if (endOfChunkIndex == 0) while (!folder.getName().equals("/")) folder = folder.getParent();
+        if (endOfChunkIndex == 0) {
+            while (!folder.getName().equals("/")) folder = folder.getParent();
+            index++;
+        }
         else endOfChunkIndex = -1;
         
         while (index < path.length()) {
+            foundFolder = false;
             endOfChunkIndex = path.indexOf("/", index);
 
             // If path is not ending with "/":
             if (endOfChunkIndex == -1)
             {
-                pathChunk = path.substring(index, path.length() - 1);
+                pathChunk = path.substring(index, path.length());
 
                 ArrayList<Inode> children = folder.getChildren(); // Go through current Inode to find correct folder
                 for (Inode child : children) {
-                    if (child.getName().equals(pathChunk) || child.getName().equals(pathChunk + "/")); // Check if there is a corresponding file OR folder
+                    if (child.getName().equals(pathChunk) || child.getName().equals(pathChunk + "/")) // Check if there is a corresponding file OR folder
                         return child;
                 }
+                return null;
             }
             
             // Not at the end of the path:
-            pathChunk = path.substring(index, endOfChunkIndex);
+            pathChunk = path.substring(index, endOfChunkIndex + 1);
             index += pathChunk.length();
 
             // Substitution
             if (pathChunk.equals("../")) {
                 folder = folder.getParent();
+                foundFolder = true;
                 continue;
             }
-            if (pathChunk.equals("./")) continue;
+            if (pathChunk.equals("./")) {
+                if (index >= path.length())
+                    return currentFolder;
+                else {
+                    foundFolder = true;
+                    continue;
+                }
+            }
 
             ArrayList<Inode> children = folder.getChildren();   // Go through current Inode 
-                for (Inode child : children) {
-                    if (child.getName().equals(pathChunk)) {    // Check if we can continue down the path
-                        folder = (FolderInode)child;
-                        foundFolder = true;
-                    }  
-                }
-            
-            if (foundFolder) foundFolder = false;
-            else return null;
+            for (Inode child : children) {
+                if (child.getName().equals(pathChunk)) {        // Check if we can continue down the path
+                    folder = (FolderInode)child;
+                    foundFolder = true;
+                }  
+            }
+
+            if (!foundFolder)
+                return null;
         }
             
-        return null;
+        return (foundFolder)? folder : null;
     }
 
     private String getChildrenFromPath(String path) {
         Inode target;
 
-        target = getInodeFromPath(path);
+        if (path == null)
+            target = currentFolder;
+        else
+            target = getInodeFromPath(path);
 
-            // In case no inode is found
-            if (target == null) return "No such file or folder at " + path; 
+        // In case no inode is found
+        if (target == null) return "No such file or folder at " + path; 
 
-            // In case the inode is a file
-            if (target instanceof FileInode) return target.getName();
+        // In case the inode is a file
+        if (target instanceof FileInode) return target.getName();
 
-            // In case the inode is a folder
-            else {
-                FolderInode folder = (FolderInode)target;
-                return folder.getContent();
-            }
+        // In case the inode is a folder
+        else {
+            FolderInode folder = (FolderInode)target;
+            return folder.getContent();
+        }
     }
 
     private String doCommand(ListCommand cmd) {
-         
-
-        if (cmd.paths.length == 1) return getChildrenFromPath(cmd.paths[0]);
+        if (cmd.paths == null) return getChildrenFromPath(null) + "\n";
+        if (cmd.paths.length < 2) return getChildrenFromPath(cmd.paths[0]) + "\n";
 
         else {
             String output = "";
@@ -128,12 +146,18 @@ public class ExplorerController implements IExplorerController{
         for (String path : cmd.paths) {
             if (!path.endsWith("/")) path += "/";
 
-            String parentFolderPath = path.substring(0, path.lastIndexOf("/", path.length() - 2));
-            String folderName = path.substring(path.lastIndexOf("/", path.length() - 2) + 1);
+            int endOfPathIndex = path.lastIndexOf("/", path.length() - 2);
+            String parentFolderPath = "";
+            if (endOfPathIndex != -1) path.substring(0, endOfPathIndex);
+
+            int folderNamePathIndex = path.lastIndexOf("/", path.length() - 2);
+            String folderName = "";
+            if (folderNamePathIndex != -1) folderName = path.substring(folderNamePathIndex + 1);
+            else folderName = path;
 
             FolderInode parentFolder = (FolderInode)getInodeFromPath(parentFolderPath);
             if (parentFolder == null) {
-                output += "Invalid path :" + parentFolderPath;
+                output += "Invalid path: " + parentFolderPath + "\n";
                 continue;
             }
 
@@ -149,15 +173,21 @@ public class ExplorerController implements IExplorerController{
 
         for (String path : cmd.paths) {
             if (path.endsWith("/")) {
-                output += "Invalid file name :" + path; 
+                return "Invalid file name: " + path + "\n"; 
             }
 
-            String parentFolderPath = path.substring(0, path.lastIndexOf("/", path.length() - 2));
-            String fileName = path.substring(path.lastIndexOf("/", path.length() - 2) + 1);
+            int endOfPathIndex = path.lastIndexOf("/");
+            String parentFolderPath = "";
+            if (endOfPathIndex != -1) path.substring(0, endOfPathIndex);
+
+            int fileNamePathIndex = path.lastIndexOf("/");
+            String fileName = "";
+            if (fileNamePathIndex != -1) fileName = path.substring(fileNamePathIndex + 1);
+            else fileName = path;
 
             FolderInode parentFolder = (FolderInode)getInodeFromPath(parentFolderPath);
             if (parentFolder == null) {
-                output += "Invalid path :" + parentFolderPath;
+                output += "Invalid path: " + parentFolderPath + "\n";
                 continue;
             }
 
@@ -178,13 +208,13 @@ public class ExplorerController implements IExplorerController{
 
         Inode targetFolder = getInodeFromPath(targetPath);
         if (targetFolder == null) {
-            output += "Invalid path: " + targetPath;
+            output += "Invalid path: " + targetPath + "\n";
         }
         else if (targetFolder instanceof FolderInode) {
             this.currentFolder = (FolderInode)targetFolder;
         }
         else {
-            output += cmd.path + " is not a folder";
+            output += cmd.path + " is not a folder\n";
         }
 
         return output;

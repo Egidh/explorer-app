@@ -13,6 +13,8 @@ public class TextInterface implements IUserInterface{
         this.parser = new UnixLikeCommandParser();
     }
 
+    String output = "";
+
     public void run() {
         Scanner scan = new Scanner(System.in);
         String userInput = null;
@@ -24,7 +26,8 @@ public class TextInterface implements IUserInterface{
             if (userInput.equals("exit"))
                 break;
             
-            controller.executeCommand(this.parser.parse(userInput));
+            output = controller.executeCommand(this.parser.parse(userInput));
+            System.out.print(output);
         }
         
         scan.close();
