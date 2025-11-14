@@ -3,7 +3,6 @@ package com.esiea.pootd2.interfaces;
 import java.util.Scanner;
 import com.esiea.pootd2.controllers.*;
 import com.esiea.pootd2.parser.*;
-import com.esiea.pootd2.models.Inode;
 
 public class TextInterface implements IUserInterface{
     private IExplorerController controller;
