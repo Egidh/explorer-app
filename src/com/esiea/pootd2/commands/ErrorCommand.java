@@ -7,7 +7,7 @@ public class ErrorCommand extends Command {
         this.arg = arg;
     }
 
-    public void printError() {
-        System.err.println("Error while running: " + arg);
+    public String getCommand() {
+        return arg;
     }
 }
