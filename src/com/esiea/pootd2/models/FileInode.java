@@ -1,5 +1,7 @@
 package com.esiea.pootd2.models;
 
+import java.util.Random;
+
 public class FileInode extends Inode{
     private String content;
     int size;
@@ -7,7 +9,9 @@ public class FileInode extends Inode{
     public FileInode(String name) {
         super(name);
         content = "";
-        size = 0;
+
+        Random rnd = new Random();
+        size = rnd.nextInt(1000000);
     }
 
     public String getName() {
