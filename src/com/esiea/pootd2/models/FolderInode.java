@@ -18,22 +18,8 @@ public class FolderInode extends Inode {
         this.size++;
     }
 
-    public String getName() {
-        return super.getName();
-    }
-
     public ArrayList<Inode> getChildren() {
         return this.children;
-    }
-
-    public String getContent() {
-        String inodes = "\n";
-
-        for (Inode inode : children) {
-            inodes += inode.getName() + " size: " + inode.getSize() + "\n";
-        }
-        
-        return inodes.substring(0, inodes.length() - 1); //removing last \n
     }
 
     @Override

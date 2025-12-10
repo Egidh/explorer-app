@@ -32,10 +32,6 @@ public class ExplorerController implements IExplorerController{
         }
     }
 
-	public Inode getCurrentFolder() {
-		return currentFolder;
-	}
-
     private Inode getInodeFromPath(String path) {
         if(path.equals("")) return currentFolder;
 
@@ -123,7 +119,12 @@ public class ExplorerController implements IExplorerController{
         // In case the inode is a folder
         else {
             FolderInode folder = (FolderInode)target;
-            return folder.getContent();
+            ArrayList<Inode> children = folder.getChildren();
+            String output = "";
+            for (Inode inode : children) {
+                output+=inode.getName() + " size: " + inode.getSize() + "\n";
+            }
+            return output;
         }
     }
 

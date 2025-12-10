@@ -13,14 +13,14 @@ public class TextInterface implements IUserInterface{
         this.parser = new UnixLikeCommandParser();
     }
 
-    String output = "";
-
+    
     public void run() {
+        String output = "";
         Scanner scan = new Scanner(System.in);
         String userInput = null;
         
         while (true) {
-            System.out.print(controller.getCurrentFolder().getName() + "-$ ");
+            System.out.print("$ ");
             userInput = scan.nextLine();
 
             if (userInput.contains("exit"))

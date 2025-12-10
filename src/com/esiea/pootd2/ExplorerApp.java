@@ -15,7 +15,6 @@ public class ExplorerApp {
         root.addInode(homeFolder);
 
         FileInode helloFile = new FileInode("hello.txt");
-        helloFile.addContent("Hello !\n");
 
         homeFolder.addInode(helloFile);
 
