@@ -134,7 +134,7 @@ public class ExplorerController implements IExplorerController{
         else {
             String output = "";
             for (String path : cmd.paths) {
-                output += path + ":\n";
+                output += path + ":";
                 output += getChildrenFromPath(path) + "\n\n";
             }
 

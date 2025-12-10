@@ -23,7 +23,7 @@ public class TextInterface implements IUserInterface{
             System.out.print(controller.getCurrentFolder().getName() + "-$ ");
             userInput = scan.nextLine();
 
-            if (userInput.equals("exit"))
+            if (userInput.contains("exit"))
                 break;
             
             output = controller.executeCommand(this.parser.parse(userInput));

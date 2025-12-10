@@ -33,7 +33,7 @@ public class FolderInode extends Inode {
             inodes += inode.getName() + " size: " + inode.getSize() + "\n";
         }
         
-        return inodes.substring(0, inodes.length() - 2); //removing last \n
+        return inodes.substring(0, inodes.length() - 1); //removing last \n
     }
 
     @Override
