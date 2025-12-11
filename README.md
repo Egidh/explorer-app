@@ -38,3 +38,7 @@ To compile and run the Explorer App you can either use the `compile_and_run.sh` 
    java -cp build/ explorer.ExplorerApp
    ```
 Please be sure to have Java, JDK and its compiler installed on your machine.
+
+## UML
+
+![UML Diagram](explorer_app_uml.png)
